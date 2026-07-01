@@ -1,0 +1,81 @@
+:root {
+  --color-primary: #c8a97e;
+  --color-primary-hover: #b28d63;
+  --color-primary-active: #9e7852;
+  --color-secondary: #f8f6f3;
+  --color-background: #ffffff;
+  --color-surface: #fcfbf9;
+  --color-surface-soft: #f5f2ed;
+  --color-border: #ece8e1;
+  --color-divider: #f2f2f2;
+  --color-text-primary: #202020;
+  --color-text-secondary: #666666;
+  --color-text-light: #999999;
+  --color-success: #57a66b;
+  --color-warning: #eaa13a;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-18: 4.5rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-30: 7.5rem;
+  --space-32: 8rem;
+  --space-40: 10rem;
+  --space-48: 12rem;
+
+  --radius-xs: 0.5rem;
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-pill: 9999px;
+
+  --shadow-xs: 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 6px 20px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.12);
+
+  --container-width: 80rem;
+  --container-max-width: 90rem;
+  --container-padding-desktop: 5rem;
+  --container-padding-tablet: 3rem;
+  --container-padding-mobile: 1.5rem;
+  --container-padding-small-mobile: 1.25rem;
+
+  --section-spacing-desktop: 10rem;
+  --section-spacing-tablet: 7.5rem;
+  --section-spacing-mobile: 6rem;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  --leading-none: 1;
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.04em;
+}
