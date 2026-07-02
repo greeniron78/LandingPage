@@ -45,7 +45,17 @@ function loadImage(source: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image()
     image.decoding = 'async'
-    image.onload = () => resolve(image)
+    image.loading = 'eager'
+    image.onload = () => {
+      const decoded = typeof image.decode === 'function' ? image.decode() : undefined
+
+      if (decoded) {
+        decoded.then(() => resolve(image)).catch(() => resolve(image))
+        return
+      }
+
+      resolve(image)
+    }
     image.onerror = () => reject(new Error(`Failed to load image: ${source}`))
     image.src = source
   })
@@ -59,10 +69,14 @@ export function useCanvasSequence({
 }: UseCanvasSequenceOptions): UseCanvasSequenceResult {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const imagesRef = useRef<HTMLImageElement[]>([])
-  const renderKeyRef = useRef('')
+  const progressRef = useRef(0)
+  const renderSnapshotRef = useRef('')
+  const rafIdRef = useRef<number | null>(null)
   const [isReady, setIsReady] = useState(false)
 
   const drawFrame = useCallback(() => {
+    rafIdRef.current = null
+
     const canvas = canvasRef.current
     const container = containerRef.current
     const images = imagesRef.current
@@ -84,17 +98,17 @@ export function useCanvasSequence({
     const targetWidth = Math.round(width * dpr)
     const targetHeight = Math.round(height * dpr)
     const frameIndex = clamp(
-      Math.round(progress * Math.max(images.length - 1, 0)),
+      Math.round(progressRef.current * Math.max(images.length - 1, 0)),
       0,
       images.length - 1,
     )
-    const renderKey = `${frameIndex}:${targetWidth}:${targetHeight}:${dpr}`
+    const renderSnapshot = `${frameIndex}:${targetWidth}:${targetHeight}:${dpr}`
 
-    if (renderKeyRef.current === renderKey) {
+    if (renderSnapshotRef.current === renderSnapshot) {
       return
     }
 
-    renderKeyRef.current = renderKey
+    renderSnapshotRef.current = renderSnapshot
 
     if (canvas.width !== targetWidth) {
       canvas.width = targetWidth
@@ -110,7 +124,15 @@ export function useCanvasSequence({
     context.setTransform(dpr, 0, 0, dpr, 0, 0)
 
     drawCoverFrame(context, images[frameIndex], width, height)
-  }, [containerRef, maxDpr, progress])
+  }, [containerRef, maxDpr])
+
+  const scheduleDraw = useCallback(() => {
+    if (rafIdRef.current !== null) {
+      return
+    }
+
+    rafIdRef.current = window.requestAnimationFrame(drawFrame)
+  }, [drawFrame])
 
   useEffect(() => {
     let isMounted = true
@@ -118,10 +140,13 @@ export function useCanvasSequence({
     if (frames.length === 0) {
       imagesRef.current = []
       setIsReady(false)
+      renderSnapshotRef.current = ''
       return undefined
     }
 
     setIsReady(false)
+    imagesRef.current = []
+    renderSnapshotRef.current = ''
 
     Promise.all(frames.map((frame) => loadImage(frame)))
       .then((images) => {
@@ -130,9 +155,8 @@ export function useCanvasSequence({
         }
 
         imagesRef.current = images
-        renderKeyRef.current = ''
         setIsReady(true)
-        drawFrame()
+        scheduleDraw()
       })
       .catch(() => {
         if (!isMounted) {
@@ -140,18 +164,22 @@ export function useCanvasSequence({
         }
 
         imagesRef.current = []
-        renderKeyRef.current = ''
+        renderSnapshotRef.current = ''
         setIsReady(false)
       })
 
     return () => {
       isMounted = false
     }
-  }, [drawFrame, frames])
+  }, [frames, scheduleDraw])
 
   useEffect(() => {
-    drawFrame()
-  }, [drawFrame])
+    progressRef.current = clamp(progress, 0, 1)
+
+    if (isReady) {
+      scheduleDraw()
+    }
+  }, [isReady, progress, scheduleDraw])
 
   useEffect(() => {
     const container = containerRef.current
@@ -161,7 +189,7 @@ export function useCanvasSequence({
     }
 
     const observer = new ResizeObserver(() => {
-      drawFrame()
+      scheduleDraw()
     })
 
     observer.observe(container)
@@ -169,7 +197,15 @@ export function useCanvasSequence({
     return () => {
       observer.disconnect()
     }
-  }, [containerRef, drawFrame])
+  }, [containerRef, scheduleDraw])
+
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) {
+        window.cancelAnimationFrame(rafIdRef.current)
+      }
+    }
+  }, [])
 
   return {
     canvasRef,
