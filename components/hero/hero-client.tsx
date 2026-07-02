@@ -1,8 +1,7 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CanvasEngine } from '@/components/canvas/canvas-engine'
-import { useScrollProgress } from '@/hooks/use-scroll-progress'
 
 type HeroClientProps = {
   frames: readonly string[]
@@ -32,32 +31,88 @@ function enterStyle(progress: number, start: number, end: number, offsetY: numbe
 
 export function HeroClient({ frames }: HeroClientProps) {
   const heroRef = useRef<HTMLElement | null>(null)
-  const progress = useScrollProgress({
-    targetRef: heroRef,
-  })
-  const heroScrollHeight = `calc(${Math.max(frames.length, 1)} * 100svh)`
+  const [progress, setProgress] = useState(0)
 
   const premiumLabelStyle = enterStyle(progress, 0.1, 0.25, 20)
   const headlineStyle = enterStyle(progress, 0.25, 0.5, 24)
   const descriptionStyle = enterStyle(progress, 0.5, 0.75, 18)
   const ctaStyle = enterStyle(progress, 0.75, 0.9, 16)
 
+  useEffect(() => {
+    const hero = heroRef.current
+
+    if (!hero || typeof window === 'undefined') {
+      return undefined
+    }
+
+    const globalWindow = window as Window & {
+      gsap?: {
+        ScrollTrigger?: {
+          create: (options: {
+            trigger: HTMLElement
+            start?: string
+            end?: () => string
+            pin?: boolean
+            pinSpacing?: boolean
+            scrub?: boolean | number
+            invalidateOnRefresh?: boolean
+            onUpdate?: (self: { progress: number }) => void
+            onRefresh?: (self: { progress: number }) => void
+          }) => { kill: () => void }
+        }
+      }
+      ScrollTrigger?: {
+        create: (options: {
+          trigger: HTMLElement
+          start?: string
+          end?: () => string
+          pin?: boolean
+          pinSpacing?: boolean
+          scrub?: boolean | number
+          invalidateOnRefresh?: boolean
+          onUpdate?: (self: { progress: number }) => void
+          onRefresh?: (self: { progress: number }) => void
+        }) => { kill: () => void }
+      }
+    }
+
+    const ScrollTrigger = globalWindow.ScrollTrigger ?? globalWindow.gsap?.ScrollTrigger
+
+    if (!ScrollTrigger) {
+      return undefined
+    }
+
+    const instance = ScrollTrigger.create({
+      trigger: hero,
+      start: 'top top',
+      end: () => `+=${Math.max(frames.length - 1, 1) * window.innerHeight}`,
+      pin: true,
+      pinSpacing: true,
+      scrub: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        setProgress(self.progress)
+      },
+      onRefresh: (self) => {
+        setProgress(self.progress)
+      },
+    })
+
+    return () => {
+      instance.kill()
+    }
+  }, [frames.length])
+
   return (
     <section
       ref={heroRef}
       className="relative isolate overflow-hidden bg-[var(--color-background)]"
-      style={{ minHeight: heroScrollHeight }}
     >
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,246,243,0.32)_0%,rgba(255,252,250,0.08)_42%,rgba(244,239,233,0.32)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(255,255,255,0)_0%,rgba(255,252,249,0.08)_46%,rgba(10,10,10,0.16)_100%)]" />
 
-        <CanvasEngine
-          frames={frames}
-          progress={progress}
-          triggerRef={heroRef}
-          className="absolute inset-0"
-        />
+        <CanvasEngine frames={frames} progress={progress} className="absolute inset-0" />
 
         <div className="absolute inset-0 z-20 flex items-end px-6 pb-[calc(24px+env(safe-area-inset-bottom))] sm:px-8 lg:px-12">
           <div className="max-w-3xl space-y-6 text-left">
