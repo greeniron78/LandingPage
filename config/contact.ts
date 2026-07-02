@@ -26,7 +26,7 @@ export type ContactConfig = {
 
 const kakaoTalkUrl = 'https://pf.kakao.com/_example'
 const telephoneNumber = '02-1234-5678'
-const businessAddress = '서울특별시 강남구 테헤란로 000, 10층'
+const businessAddress = '경산북도 경산시 영남대학교 컴공 갈길없다'
 const mapUrl = 'https://maps.google.com/?q=Seoul'
 
 export const contactConfig = {

@@ -1,5 +1,4 @@
 import Hero from '@/components/hero/hero'
-import { CtaSection } from '@/components/sections/cta-section'
 import { ContactSection } from '@/components/sections/contact-section'
 import { ConcernSection } from '@/components/sections/concern-section'
 import { StorySection } from '@/components/sections/story-section'
@@ -13,7 +12,6 @@ export default function HomePage() {
       <ConcernSection />
       <StorySection />
       <ContactSection />
-      <CtaSection />
     </main>
   )
 }
