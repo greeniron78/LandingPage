@@ -1,7 +1,7 @@
 import Hero from '@/components/hero/hero'
 import { CtaSection } from '@/components/sections/cta-section'
+import { ContactSection } from '@/components/sections/contact-section'
 import { ConcernSection } from '@/components/sections/concern-section'
-import { ReservationSection } from '@/components/sections/reservation-section'
 import { StorySection } from '@/components/sections/story-section'
 import { TrustSection } from '@/components/sections/trust-section'
 
@@ -12,7 +12,7 @@ export default function HomePage() {
       <TrustSection />
       <ConcernSection />
       <StorySection />
-      <ReservationSection />
+      <ContactSection />
       <CtaSection />
     </main>
   )
