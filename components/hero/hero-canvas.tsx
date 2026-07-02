@@ -1,7 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
 import { CanvasEngine } from '@/components/canvas/canvas-engine'
+
+gsap.registerPlugin(ScrollTrigger)
 
 type HeroCanvasProps = {
   frames: readonly string[]
@@ -41,44 +45,7 @@ export function HeroCanvas({ frames }: HeroCanvasProps) {
   useEffect(() => {
     const hero = heroRef.current
 
-    if (!hero || typeof window === 'undefined') {
-      return undefined
-    }
-
-    const globalWindow = window as Window & {
-      gsap?: {
-        ScrollTrigger?: {
-          create: (options: {
-            trigger: HTMLElement
-            start?: string
-            end?: string
-            pin?: boolean
-            pinSpacing?: boolean
-            scrub?: boolean | number
-            invalidateOnRefresh?: boolean
-            onUpdate?: (self: { progress: number }) => void
-            onRefresh?: (self: { progress: number }) => void
-          }) => { kill: () => void }
-        }
-      }
-      ScrollTrigger?: {
-        create: (options: {
-          trigger: HTMLElement
-          start?: string
-          end?: string
-          pin?: boolean
-          pinSpacing?: boolean
-          scrub?: boolean | number
-          invalidateOnRefresh?: boolean
-          onUpdate?: (self: { progress: number }) => void
-          onRefresh?: (self: { progress: number }) => void
-        }) => { kill: () => void }
-      }
-    }
-
-    const ScrollTrigger = globalWindow.ScrollTrigger ?? globalWindow.gsap?.ScrollTrigger
-
-    if (!ScrollTrigger) {
+    if (!hero) {
       return undefined
     }
 
