@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { readdir } from 'node:fs/promises'
-import { HeroClient } from '@/components/hero/hero-client'
+import { HeroCanvas } from '@/components/hero/hero-canvas'
 
 const sequenceDirectory = path.join(process.cwd(), 'public/images/hero/sequence')
 
@@ -27,5 +27,5 @@ async function getHeroFrames() {
 export default async function Hero() {
   const frames = await getHeroFrames()
 
-  return <HeroClient frames={frames} />
+  return <HeroCanvas frames={frames} />
 }
