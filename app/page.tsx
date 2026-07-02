@@ -1,4 +1,4 @@
-import { Hero } from '@/components/hero/hero'
+import Hero from '@/components/hero/hero'
 import { CtaSection } from '@/components/sections/cta-section'
 import { ConcernSection } from '@/components/sections/concern-section'
 import { ReservationSection } from '@/components/sections/reservation-section'
