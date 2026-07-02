@@ -85,7 +85,7 @@ export function HeroClient({ frames }: HeroClientProps) {
     const instance = ScrollTrigger.create({
       trigger: hero,
       start: 'top top',
-      end: () => `+=${Math.max(frames.length - 1, 1) * window.innerHeight}`,
+      end: '+=2400',
       pin: true,
       pinSpacing: true,
       scrub: true,
@@ -106,9 +106,9 @@ export function HeroClient({ frames }: HeroClientProps) {
   return (
     <section
       ref={heroRef}
-      className="relative isolate overflow-hidden bg-[var(--color-background)]"
+      className="relative isolate min-h-[100svh] overflow-hidden bg-[var(--color-background)]"
     >
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
+      <div className="relative h-[100svh] overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,246,243,0.32)_0%,rgba(255,252,250,0.08)_42%,rgba(244,239,233,0.32)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(255,255,255,0)_0%,rgba(255,252,249,0.08)_46%,rgba(10,10,10,0.16)_100%)]" />
 
