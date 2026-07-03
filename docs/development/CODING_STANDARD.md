@@ -105,3 +105,35 @@ Define code-level conventions for the project so implementation stays consistent
 - Keep files formatted by the project formatter.
 - Preserve readable grouping in long class lists or object literals.
 
+Content Rules
+
+Content modules contain:
+
+✓ Headlines
+✓ CTA text
+✓ Descriptions
+✓ Marketing copy
+✓ Labels
+
+Content modules must never contain:
+
+✗ React
+✗ JSX
+✗ Hooks
+✗ Styling
+✗ Event handlers
+✗ Rendering logic
+✗ Animation logic
+
+## Barrel File Rule
+
+Do NOT create index.ts by default.
+
+Introduce index.ts only when one of the following conditions is met:
+
+- The folder contains five or more public modules.
+- Import statements become repetitive.
+- Multiple modules are frequently imported together.
+- A single public API improves maintainability.
+
+Otherwise, prefer direct imports.
