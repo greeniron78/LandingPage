@@ -30,6 +30,8 @@ const shadowClasses: Record<CardShadow, string> = {
   md: 'shadow-[0_16px_40px_rgba(17,17,17,0.05)]',
 }
 
+const baseClasses = 'border border-[var(--color-border)]'
+
 export function Card<TElement extends ElementType = 'div'>({
   as,
   children,
@@ -44,7 +46,7 @@ export function Card<TElement extends ElementType = 'div'>({
   return (
     <Component
       className={[
-        'border border-[var(--color-border)]',
+        baseClasses,
         toneClasses[tone],
         radiusClasses[radius],
         shadowClasses[shadow],
@@ -58,4 +60,3 @@ export function Card<TElement extends ElementType = 'div'>({
     </Component>
   )
 }
-
