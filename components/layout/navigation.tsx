@@ -1,12 +1,6 @@
 import Link from 'next/link'
+import { navigationItems } from '@/config/navigation'
 import { Container } from './container'
-
-const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Programs', href: '#programs' },
-  { label: 'Reviews', href: '#reviews' },
-  { label: 'FAQ', href: '#faq' },
-]
 
 export function Navigation() {
   return (
@@ -19,7 +13,7 @@ export function Navigation() {
 
           <nav aria-label="Primary" className="hidden md:block">
             <ul className="flex items-center gap-8">
-              {navItems.map((item) => (
+              {navigationItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

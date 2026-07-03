@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import './globals.css'
+import { siteConfig } from '@/config/site'
 import { Providers } from './providers'
 import { Footer } from '@/components/layout/footer'
 import { Navigation } from '@/components/layout/navigation'
-import { siteConfig } from '@/lib/seo/site'
 
 const siteUrl = new URL(siteConfig.siteUrl)
 
