@@ -2,6 +2,7 @@ import { Card } from '@/components/layout/card'
 import { Section } from '@/components/layout/section'
 import { SectionTitle } from '@/components/layout/section-title'
 import { ContactCards } from '@/components/sections/contact-cards'
+import { contactContent } from '@/content/contact'
 import { contactConfig } from '@/config/contact'
 
 export function ContactSection() {
@@ -9,8 +10,8 @@ export function ContactSection() {
     <Section id="contact" className="bg-[var(--color-background)]">
       <div className="space-y-10">
         <SectionTitle
-          title={contactConfig.sectionTitle}
-          description={contactConfig.sectionSubtitle}
+          title={contactContent.sectionTitle}
+          description={contactContent.sectionSubtitle}
           className="max-w-2xl"
         />
 
@@ -24,7 +25,7 @@ export function ContactSection() {
             {contactConfig.businessHours ? (
               <div className="space-y-2">
                 <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--color-text-light)]">
-                  Business Hours
+                  {contactContent.businessHoursLabel}
                 </p>
                 <p className="text-sm leading-7 text-[var(--color-text-primary)]">
                   {contactConfig.businessHours}
@@ -35,7 +36,7 @@ export function ContactSection() {
             {contactConfig.consultationMessage ? (
               <div className="space-y-2">
                 <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--color-text-light)]">
-                  Consultation Message
+                  {contactContent.consultationMessageLabel}
                 </p>
                 <p className="text-sm leading-7 text-[var(--color-text-primary)]">
                   {contactConfig.consultationMessage}

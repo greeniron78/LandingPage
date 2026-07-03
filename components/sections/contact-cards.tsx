@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Card } from '@/components/layout/card'
+import { contactContent } from '@/content/contact'
 import type { ContactCardConfig, ContactIconName } from '@/config/contact'
 
 type ContactCardsProps = {
@@ -103,7 +104,7 @@ function ContactCard({
       {card.address ? (
         <Card as="div" className="mt-6 p-4">
           <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--color-text-light)]">
-            Business Address
+            {contactContent.businessAddressLabel}
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--color-text-primary)]">{card.address}</p>
         </Card>
