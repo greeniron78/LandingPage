@@ -105,14 +105,14 @@ export function HeroCanvas({ frames }: HeroCanvasProps) {
               </p>
             </div>
 
-            <div style={ctaStyle} className="pointer-events-auto">
+            {/* <div style={ctaStyle} className="pointer-events-auto">
               <button
                 type="button"
                 className="inline-flex items-center rounded-full border border-[rgba(255,255,255,0.18)] bg-[rgba(255,255,255,0.10)] px-5 py-3 text-sm font-medium tracking-[-0.01em] text-[rgba(255,255,255,0.92)]"
               >
                 상담 예약하기
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
