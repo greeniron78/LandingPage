@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { Card } from '@/components/layout/card'
 import type { ContactCardConfig, ContactIconName } from '@/config/contact'
 
 type ContactCardsProps = {
@@ -77,7 +78,13 @@ function ContactCard({
       : card.href ?? '#'
 
   return (
-    <article className="flex h-full flex-col rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[0_16px_40px_rgba(17,17,17,0.05)] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_60px_rgba(17,17,17,0.08)] sm:p-7">
+    <Card
+      as="article"
+      tone="surface"
+      radius="xl"
+      shadow="md"
+      className="flex h-full flex-col p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_60px_rgba(17,17,17,0.08)] sm:p-7"
+    >
       <div className="flex items-start gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-background)]">
           <ContactIcon icon={card.icon} />
@@ -94,12 +101,12 @@ function ContactCard({
       </div>
 
       {card.address ? (
-        <div className="mt-6 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-4">
+        <Card as="div" className="mt-6 p-4">
           <p className="text-xs font-medium uppercase tracking-[0.24em] text-[var(--color-text-light)]">
             Business Address
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--color-text-primary)]">{card.address}</p>
-        </div>
+        </Card>
       ) : null}
 
       <div className="mt-auto pt-6">
@@ -112,7 +119,7 @@ function ContactCard({
           {card.actionLabel}
         </a>
       </div>
-    </article>
+    </Card>
   )
 }
 

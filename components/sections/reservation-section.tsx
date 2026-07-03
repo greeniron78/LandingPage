@@ -1,3 +1,4 @@
+import { Card } from '@/components/layout/card'
 import { Section } from '@/components/layout/section'
 import { SectionTitle } from '@/components/layout/section-title'
 
@@ -30,7 +31,7 @@ export function ReservationSection() {
         />
 
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8">
+          <Card as="div" tone="surface" radius="xl" className="p-6 sm:p-8">
             <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">예약 안내</h3>
             <p className="mt-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
               상담 전에는 아래 항목만 확인해도 충분합니다. 다음 단계에서 실제 예약 폼이나
@@ -38,35 +39,32 @@ export function ReservationSection() {
             </p>
 
             <dl className="mt-6 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-5">
+              <Card as="div" className="p-5">
                 <dt className="text-sm font-medium text-[var(--color-text-light)]">상담 시간</dt>
                 <dd className="mt-2 text-base font-semibold text-[var(--color-text-primary)]">
                   30분 내외
                 </dd>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-5">
+              </Card>
+              <Card as="div" className="p-5">
                 <dt className="text-sm font-medium text-[var(--color-text-light)]">예약 방식</dt>
                 <dd className="mt-2 text-base font-semibold text-[var(--color-text-primary)]">
                   상담 우선
                 </dd>
-              </div>
-              <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-5">
+              </Card>
+              <Card as="div" className="p-5">
                 <dt className="text-sm font-medium text-[var(--color-text-light)]">안내 항목</dt>
                 <dd className="mt-2 text-base font-semibold text-[var(--color-text-primary)]">
                   고민 / 일정 / 연락처
                 </dd>
-              </div>
+              </Card>
             </dl>
-          </div>
+          </Card>
 
-          <div className="rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-6 sm:p-8">
+          <Card as="div" tone="soft" radius="xl" className="p-6 sm:p-8">
             <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">예약 절차</h3>
             <ol className="mt-6 space-y-4">
               {reservationSteps.map((item) => (
-                <li
-                  key={item.step}
-                  className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-5"
-                >
+                <Card as="li" key={item.step} className="p-5">
                   <p className="text-sm font-medium tracking-[0.24em] text-[var(--color-text-light)] uppercase">
                     {item.step}
                   </p>
@@ -76,10 +74,10 @@ export function ReservationSection() {
                   <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {item.description}
                   </p>
-                </li>
+                </Card>
               ))}
             </ol>
-          </div>
+          </Card>
         </div>
       </div>
     </Section>

@@ -1,3 +1,4 @@
+import { Card } from '@/components/layout/card'
 import { Section } from '@/components/layout/section'
 import { SectionTitle } from '@/components/layout/section-title'
 
@@ -36,10 +37,7 @@ export function StorySection() {
 
         <ol className="grid gap-4 lg:grid-cols-4">
           {storySteps.map((item) => (
-            <li
-              key={item.step}
-              className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-6"
-            >
+            <Card as="li" key={item.step} className="p-6">
               <p className="text-sm font-medium tracking-[0.24em] text-[var(--color-text-light)] uppercase">
                 {item.step}
               </p>
@@ -49,7 +47,7 @@ export function StorySection() {
               <p className="mt-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                 {item.description}
               </p>
-            </li>
+            </Card>
           ))}
         </ol>
       </div>

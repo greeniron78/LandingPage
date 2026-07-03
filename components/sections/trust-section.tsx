@@ -1,3 +1,4 @@
+import { Card } from '@/components/layout/card'
 import { Section } from '@/components/layout/section'
 import { SectionTitle } from '@/components/layout/section-title'
 
@@ -28,15 +29,12 @@ export function TrustSection() {
 
         <ul className="grid gap-4 md:grid-cols-3">
           {trustPoints.map((point) => (
-            <li
-              key={point.title}
-              className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-background)] p-6"
-            >
+            <Card as="li" key={point.title} className="p-6">
               <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">{point.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
                 {point.description}
               </p>
-            </li>
+            </Card>
           ))}
         </ul>
       </div>
