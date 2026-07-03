@@ -130,6 +130,8 @@ docs/
 │   ├── CREATIVE_DIRECTION.md
 │   ├── DESIGN_SYSTEM.md
 │   ├── MOTION_SPEC.md
+│   ├── PROJECT_STRUCTURE.md
+│   ├── DECISION_LOG.md
 │   └── TECHNICAL_ARCHITECTURE.md
 │
 ├── design/
@@ -140,6 +142,9 @@ docs/
 │
 └── development/
     ├── AI_IMPLEMENTATION_RULE.md
+    ├── CODING_STANDARD.md
+    ├── GIT_WORKFLOW.md
+    ├── TASK_TEMPLATE.md
     └── TASK_ROADMAP.md
 ```
 
@@ -155,12 +160,17 @@ docs/
 4. `DESIGN_SYSTEM.md`
 5. `TECHNICAL_ARCHITECTURE.md`
 6. `MOTION_SPEC.md`
-7. `COMPONENT_SPEC.md`
-8. `COPYWRITING.md`
-9. `IMAGE_PROMPT.md`
-10. `STORYBOARD.md`
-11. `AI_IMPLEMENTATION_RULE.md`
-12. `TASK_ROADMAP.md`
+7. `PROJECT_STRUCTURE.md`
+8. `DECISION_LOG.md`
+9. `COMPONENT_SPEC.md`
+10. `COPYWRITING.md`
+11. `IMAGE_PROMPT.md`
+12. `STORYBOARD.md`
+13. `AI_IMPLEMENTATION_RULE.md`
+14. `CODING_STANDARD.md`
+15. `GIT_WORKFLOW.md`
+16. `TASK_TEMPLATE.md`
+17. `TASK_ROADMAP.md`
 
 ---
 

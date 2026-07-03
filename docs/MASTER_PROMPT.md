@@ -362,6 +362,59 @@ In those cases, explain the issue and ask for clarification instead of guessing.
 
 ---
 
+# PROJECT SAFETY RULES
+
+The following project rules always take precedence unless explicitly overridden by the user.
+
+## Architecture
+
+- Never change the project architecture without explicit approval.
+- Never change the folder structure without explicit approval.
+- Never introduce a new root directory without approval.
+- Never replace an existing implementation with a different architectural approach.
+
+## Existing Code
+
+- Never refactor unrelated code.
+- Never rename existing files unless explicitly requested.
+- Never move files to different locations unless requested.
+- Never remove existing functionality while implementing a new task.
+
+## Reuse
+
+Before creating new code:
+
+- Reuse existing components.
+- Reuse existing hooks.
+- Reuse existing utilities.
+- Reuse existing configuration.
+
+Only create new files when no suitable implementation already exists.
+
+## Scope
+
+Implement only the current task.
+
+If a requested implementation requires architectural changes:
+
+Stop implementation.
+
+Explain why.
+
+Wait for approval before proceeding.
+
+---
+
+## Change Policy
+
+Prefer extending existing implementations over replacing them.
+
+Small incremental improvements are preferred over large refactors.
+
+Existing stable code should be preserved whenever possible.
+
+---
+
 # OUTPUT FORMAT
 
 Unless explicitly requested otherwise:
