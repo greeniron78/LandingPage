@@ -1,32 +1,4 @@
-:root {
-  --motion-duration-fast: 200ms;
-  --motion-duration-default: 400ms;
-  --motion-duration-medium: 600ms;
-  --motion-duration-luxury: 1200ms;
-  --motion-duration-very-slow: 1800ms;
-
-  --motion-ease-default: ease-out;
-  --motion-ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-ease-opacity: ease-in-out;
-  --motion-ease-scale: ease-out;
-  --motion-ease-scroll: linear;
-
-  --motion-distance-xs: 4px;
-  --motion-distance-sm: 8px;
-  --motion-distance-md: 16px;
-  --motion-distance-lg: 24px;
-  --motion-distance-xl: 40px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  :root {
-    --motion-duration-fast: 1ms;
-    --motion-duration-default: 1ms;
-    --motion-duration-medium: 1ms;
-    --motion-duration-luxury: 1ms;
-    --motion-duration-very-slow: 1ms;
-  }
-
   *,
   *::before,
   *::after {
