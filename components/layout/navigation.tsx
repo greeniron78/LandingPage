@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { navigationItems } from '@/config/navigation'
+import { siteConfig } from '@/config/site'
 import { Container } from './container'
 
 export function Navigation() {
@@ -8,7 +9,7 @@ export function Navigation() {
       <Container>
         <div className="flex h-16 items-center justify-between gap-6 sm:h-20">
           <Link href="/" className="text-sm font-semibold tracking-[0.2em] uppercase">
-            Premium Skin Care
+            {siteConfig.brandLabel}
           </Link>
 
           <nav aria-label="Primary" className="hidden md:block">

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 export const siteConfig = {
   name: 'Premium Skin Care Landing Page',
+  brandLabel: 'Premium Skin Care',
   description:
     'A premium interactive skin care landing page designed to drive reservation conversion with a calm, elegant brand experience.',
   locale: 'ko_KR',
