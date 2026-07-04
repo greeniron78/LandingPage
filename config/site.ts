@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
 
 const siteName = '프리미엄 스킨케어 상담 예약'
+const openGraphImage = {
+  url: '/images/hero/sequence/frame0001.webp',
+  alt: siteName,
+  width: 1288,
+  height: 1608,
+  type: 'image/webp',
+} as const
 
 export const siteConfig = {
   name: siteName,
@@ -51,6 +58,7 @@ export const siteMetadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [openGraphImage],
   },
   twitter: {
     card: 'summary_large_image',
