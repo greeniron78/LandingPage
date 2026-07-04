@@ -90,36 +90,66 @@ function decodeImage(image: HTMLImageElement) {
   return Promise.resolve(image)
 }
 
-function waitForNextFrame() {
+function waitForIdlePeriod() {
   return new Promise<void>((resolve) => {
-    window.requestAnimationFrame(() => {
+    const requestIdleCallback = window.requestIdleCallback
+
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => {
+        resolve()
+      }, { timeout: 150 })
+      return
+    }
+
+    window.setTimeout(() => {
       resolve()
-    })
+    }, 0)
   })
 }
 
 export function useCanvasSequence({
   frames,
   progress,
-  containerRef,
   maxDpr = 2,
 }: UseCanvasSequenceOptions): UseCanvasSequenceResult {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const imagesRef = useRef<FrameSlot[]>([])
+  const sizeRef = useRef({ width: 0, height: 0 })
   const progressRef = useRef(0)
   const renderSnapshotRef = useRef('')
   const rafIdRef = useRef<number | null>(null)
   const decodeQueueRef = useRef(Promise.resolve())
   const [isReady, setIsReady] = useState(false)
 
+  const measureCanvas = useCallback(() => {
+    const container = canvasRef.current?.parentElement
+
+    if (!container) {
+      sizeRef.current = { width: 0, height: 0 }
+      return false
+    }
+
+    const rect = container.getBoundingClientRect()
+    const width = Math.max(1, Math.floor(rect.width))
+    const height = Math.max(1, Math.floor(rect.height))
+    const nextSize = sizeRef.current.width === width && sizeRef.current.height === height
+
+    if (nextSize) {
+      return false
+    }
+
+    sizeRef.current = { width, height }
+    return true
+  }, [])
+
   const drawFrame = useCallback(() => {
     rafIdRef.current = null
 
     const canvas = canvasRef.current
-    const container = containerRef.current
     const images = imagesRef.current
+    const { width, height } = sizeRef.current
 
-    if (!canvas || !container || images.length === 0) {
+    if (!canvas || images.length === 0 || width === 0 || height === 0) {
       return
     }
 
@@ -129,9 +159,6 @@ export function useCanvasSequence({
       return
     }
 
-    const rect = container.getBoundingClientRect()
-    const width = Math.max(1, Math.floor(rect.width))
-    const height = Math.max(1, Math.floor(rect.height))
     const dpr = clamp(window.devicePixelRatio || 1, 1, maxDpr)
     const targetWidth = Math.round(width * dpr)
     const targetHeight = Math.round(height * dpr)
@@ -168,7 +195,7 @@ export function useCanvasSequence({
     context.setTransform(dpr, 0, 0, dpr, 0, 0)
 
     drawCoverFrame(context, renderableFrame.image, width, height)
-  }, [containerRef, maxDpr])
+  }, [maxDpr])
 
   const scheduleDraw = useCallback(() => {
     if (rafIdRef.current !== null) {
@@ -193,6 +220,7 @@ export function useCanvasSequence({
 
     setIsReady(false)
     imagesRef.current = Array.from({ length: frames.length }, () => null)
+    measureCanvas()
     renderSnapshotRef.current = ''
     decodeQueueRef.current = Promise.resolve()
 
@@ -217,7 +245,7 @@ export function useCanvasSequence({
               }
 
               decodeQueueRef.current = decodeQueueRef.current
-                .then(() => waitForNextFrame())
+                .then(() => waitForIdlePeriod())
                 .then(() => decodeImage(image))
                 .then((decodedImage) => {
                   if (!isMounted) {
@@ -257,7 +285,7 @@ export function useCanvasSequence({
     return () => {
       isMounted = false
     }
-  }, [frames, scheduleDraw])
+  }, [frames, measureCanvas, scheduleDraw])
 
   useEffect(() => {
     progressRef.current = clamp(progress, 0, 1)
@@ -268,22 +296,37 @@ export function useCanvasSequence({
   }, [isReady, progress, scheduleDraw])
 
   useEffect(() => {
-    const container = containerRef.current
+    const container = canvasRef.current?.parentElement
 
     if (!container || typeof ResizeObserver === 'undefined') {
       return undefined
     }
 
     const observer = new ResizeObserver(() => {
+      if (measureCanvas()) {
+        renderSnapshotRef.current = ''
+      }
+
       scheduleDraw()
     })
 
     observer.observe(container)
 
+    const handleResize = () => {
+      if (measureCanvas()) {
+        renderSnapshotRef.current = ''
+      }
+
+      scheduleDraw()
+    }
+
+    window.addEventListener('resize', handleResize)
+
     return () => {
       observer.disconnect()
+      window.removeEventListener('resize', handleResize)
     }
-  }, [containerRef, scheduleDraw])
+  }, [measureCanvas, scheduleDraw])
 
   useEffect(() => {
     return () => {
