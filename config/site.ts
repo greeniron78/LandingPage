@@ -1,13 +1,23 @@
 import type { Metadata } from 'next'
 
 const siteName = '프리미엄 스킨케어 상담 예약'
-const openGraphImage = {
-  url: '/images/hero/sequence/frame0001.webp',
+const heroSequenceBasePath = '/images/hero/sequence'
+
+export const heroSequenceFirstFrame = {
+  url: `${heroSequenceBasePath}/frame0001.webp`,
   alt: siteName,
   width: 1288,
   height: 1608,
   type: 'image/webp',
 } as const
+
+export const heroSequencePreloadFrames = [
+  `${heroSequenceBasePath}/frame0001.webp`,
+  `${heroSequenceBasePath}/frame0002.webp`,
+  `${heroSequenceBasePath}/frame0003.webp`,
+  `${heroSequenceBasePath}/frame0004.webp`,
+  `${heroSequenceBasePath}/frame0005.webp`,
+] as const
 
 export const siteConfig = {
   name: siteName,
@@ -58,7 +68,7 @@ export const siteMetadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [openGraphImage],
+    images: [heroSequenceFirstFrame],
   },
   twitter: {
     card: 'summary_large_image',
@@ -66,7 +76,7 @@ export const siteMetadata: Metadata = {
     creator: siteConfig.brandLabel,
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [openGraphImage],
+    images: [heroSequenceFirstFrame],
   },
   robots: {
     index: true,
