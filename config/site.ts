@@ -62,8 +62,11 @@ export const siteMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    site: siteConfig.brandLabel,
+    creator: siteConfig.brandLabel,
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [openGraphImage],
   },
   robots: {
     index: true,
