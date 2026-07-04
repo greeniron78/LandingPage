@@ -14,8 +14,34 @@ type UseCanvasSequenceResult = {
   isReady: boolean
 }
 
+type FrameSlot = HTMLImageElement | null
+
+const HERO_PRELOAD_FRAME_COUNT = 5
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
+}
+
+function getRenderableFrame(images: readonly FrameSlot[], targetIndex: number) {
+  const boundedIndex = clamp(targetIndex, 0, Math.max(images.length - 1, 0))
+
+  for (let index = boundedIndex; index >= 0; index -= 1) {
+    const image = images[index]
+
+    if (image) {
+      return { image, frameIndex: index }
+    }
+  }
+
+  for (let index = boundedIndex + 1; index < images.length; index += 1) {
+    const image = images[index]
+
+    if (image) {
+      return { image, frameIndex: index }
+    }
+  }
+
+  return null
 }
 
 function drawCoverFrame(
@@ -47,17 +73,28 @@ function loadImage(source: string) {
     image.decoding = 'async'
     image.loading = 'eager'
     image.onload = () => {
-      const decoded = typeof image.decode === 'function' ? image.decode() : undefined
-
-      if (decoded) {
-        decoded.then(() => resolve(image)).catch(() => resolve(image))
-        return
-      }
-
       resolve(image)
     }
     image.onerror = () => reject(new Error(`Failed to load image: ${source}`))
     image.src = source
+  })
+}
+
+function decodeImage(image: HTMLImageElement) {
+  const decoded = typeof image.decode === 'function' ? image.decode() : undefined
+
+  if (decoded) {
+    return decoded.then(() => image).catch(() => image)
+  }
+
+  return Promise.resolve(image)
+}
+
+function waitForNextFrame() {
+  return new Promise<void>((resolve) => {
+    window.requestAnimationFrame(() => {
+      resolve()
+    })
   })
 }
 
@@ -68,10 +105,11 @@ export function useCanvasSequence({
   maxDpr = 2,
 }: UseCanvasSequenceOptions): UseCanvasSequenceResult {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const imagesRef = useRef<HTMLImageElement[]>([])
+  const imagesRef = useRef<FrameSlot[]>([])
   const progressRef = useRef(0)
   const renderSnapshotRef = useRef('')
   const rafIdRef = useRef<number | null>(null)
+  const decodeQueueRef = useRef(Promise.resolve())
   const [isReady, setIsReady] = useState(false)
 
   const drawFrame = useCallback(() => {
@@ -102,7 +140,13 @@ export function useCanvasSequence({
       0,
       images.length - 1,
     )
-    const renderSnapshot = `${frameIndex}:${targetWidth}:${targetHeight}:${dpr}`
+    const renderableFrame = getRenderableFrame(images, frameIndex)
+
+    if (!renderableFrame) {
+      return
+    }
+
+    const renderSnapshot = `${renderableFrame.frameIndex}:${targetWidth}:${targetHeight}:${dpr}`
 
     if (renderSnapshotRef.current === renderSnapshot) {
       return
@@ -123,7 +167,7 @@ export function useCanvasSequence({
 
     context.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-    drawCoverFrame(context, images[frameIndex], width, height)
+    drawCoverFrame(context, renderableFrame.image, width, height)
   }, [containerRef, maxDpr])
 
   const scheduleDraw = useCallback(() => {
@@ -136,6 +180,9 @@ export function useCanvasSequence({
 
   useEffect(() => {
     let isMounted = true
+    const initialFrameCount = Math.min(HERO_PRELOAD_FRAME_COUNT, frames.length)
+    const initialFrames = frames.slice(0, initialFrameCount)
+    const backgroundFrames = frames.slice(initialFrameCount)
 
     if (frames.length === 0) {
       imagesRef.current = []
@@ -145,18 +192,57 @@ export function useCanvasSequence({
     }
 
     setIsReady(false)
-    imagesRef.current = []
+    imagesRef.current = Array.from({ length: frames.length }, () => null)
     renderSnapshotRef.current = ''
+    decodeQueueRef.current = Promise.resolve()
 
-    Promise.all(frames.map((frame) => loadImage(frame)))
+    Promise.all(initialFrames.map((frame) => loadImage(frame).then((image) => decodeImage(image))))
       .then((images) => {
         if (!isMounted) {
           return
         }
 
-        imagesRef.current = images
+        images.forEach((image, index) => {
+          imagesRef.current[index] = image
+        })
+
         setIsReady(true)
         scheduleDraw()
+
+        backgroundFrames.forEach((frame, index) => {
+          void loadImage(frame)
+            .then((image) => {
+              if (!isMounted) {
+                return
+              }
+
+              decodeQueueRef.current = decodeQueueRef.current
+                .then(() => waitForNextFrame())
+                .then(() => decodeImage(image))
+                .then((decodedImage) => {
+                  if (!isMounted) {
+                    return
+                  }
+
+                  imagesRef.current[initialFrameCount + index] = decodedImage
+                  scheduleDraw()
+                })
+                .catch(() => {
+                  if (!isMounted) {
+                    return
+                  }
+
+                  imagesRef.current[initialFrameCount + index] = null
+                })
+            })
+            .catch(() => {
+              if (!isMounted) {
+                return
+              }
+
+              imagesRef.current[initialFrameCount + index] = null
+            })
+        })
       })
       .catch(() => {
         if (!isMounted) {
