@@ -39,8 +39,11 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 summary:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 6px rgba(200, 169, 126, 0.32);
 }
 
 button,
