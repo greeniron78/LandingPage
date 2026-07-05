@@ -69,9 +69,11 @@ function ContactIcon({ icon }: { icon: ContactIconName }) {
 function ContactCard({
   card,
   telephoneNumber,
+  isVisible,
 }: {
   card: ContactCardConfig
   telephoneNumber: string
+  isVisible: boolean
 }) {
   const href =
     card.icon === 'phone'
@@ -115,6 +117,7 @@ function ContactCard({
           href={href}
           target={card.external ? '_blank' : undefined}
           rel={card.external ? 'noreferrer' : undefined}
+          tabIndex={isVisible ? 0 : -1}
           className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-5 py-3 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-300 hover:border-[rgba(16,16,16,0.12)] hover:bg-[var(--color-surface-soft)]"
         >
           {card.actionLabel}
@@ -197,7 +200,7 @@ export function ContactCards({ cards, telephoneNumber }: ContactCardsProps) {
           ].join(' ')}
           style={{ transitionDelay: `${index * 90}ms` }}
         >
-          <ContactCard card={card} telephoneNumber={telephoneNumber} />
+          <ContactCard card={card} telephoneNumber={telephoneNumber} isVisible={visible[index]} />
         </li>
       ))}
     </ul>
