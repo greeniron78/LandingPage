@@ -24,9 +24,9 @@ export function SectionTitle({
         {title}
       </h2>
       {description ? (
-        <div className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+        <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
           {description}
-        </div>
+        </p>
       ) : null}
     </header>
   )
