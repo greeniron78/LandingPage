@@ -49,24 +49,31 @@ export function HeroCanvas({ frames }: HeroCanvasProps) {
       return undefined
     }
 
-    const instance = ScrollTrigger.create({
-      trigger: hero,
-      start: 'top top',
-      end: '+=2400',
-      pin: true,
-      pinSpacing: true,
-      scrub: true,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        setProgress(self.progress)
-      },
-      onRefresh: (self) => {
-        setProgress(self.progress)
-      },
+    let instance: ScrollTrigger | null = null
+    const animationFrameId = window.requestAnimationFrame(() => {
+      instance = ScrollTrigger.create({
+        trigger: hero,
+        start: 'top top',
+        end: '+=2400',
+        pin: true,
+        pinSpacing: true,
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          setProgress(self.progress)
+        },
+        onRefresh: (self) => {
+          setProgress(self.progress)
+        },
+      })
     })
 
     return () => {
-      instance.kill()
+      window.cancelAnimationFrame(animationFrameId)
+
+      if (instance) {
+        instance.kill()
+      }
     }
   }, [])
 
