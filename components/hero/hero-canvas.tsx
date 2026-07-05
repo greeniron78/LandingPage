@@ -85,7 +85,7 @@ export function HeroCanvas({ frames }: HeroCanvasProps) {
 
         <CanvasEngine frames={frames} progress={progress} className="absolute inset-0" />
 
-        <div className="absolute inset-0 z-20 flex items-end px-6 pb-[calc(24px+env(safe-area-inset-bottom))] sm:px-8 lg:px-12">
+        <header className="absolute inset-0 z-20 flex items-end px-6 pb-[calc(24px+env(safe-area-inset-bottom))] sm:px-8 lg:px-12">
           <div className="max-w-3xl space-y-6 text-left">
             <p
               className="text-[0.7rem] font-medium uppercase tracking-[0.42em] text-[rgba(255,255,255,0.88)] sm:text-[0.75rem]"
@@ -121,7 +121,7 @@ export function HeroCanvas({ frames }: HeroCanvasProps) {
               </button>
             </div> */}
           </div>
-        </div>
+        </header>
       </div>
     </section>
   )
