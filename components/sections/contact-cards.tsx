@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Card } from '@/components/layout/card'
 import { contactContent } from '@/content/contact'
 import type { ContactCardConfig, ContactIconName } from '@/config/contact'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 type ContactCardsProps = {
   cards: readonly ContactCardConfig[]
@@ -70,10 +71,12 @@ function ContactCard({
   card,
   telephoneNumber,
   isVisible,
+  prefersReducedMotion,
 }: {
   card: ContactCardConfig
   telephoneNumber: string
   isVisible: boolean
+  prefersReducedMotion: boolean
 }) {
   const href =
     card.icon === 'phone'
@@ -86,7 +89,12 @@ function ContactCard({
       tone="surface"
       radius="xl"
       shadow="md"
-      className="flex h-full flex-col p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_60px_rgba(17,17,17,0.08)] sm:p-7"
+      className={[
+        'flex h-full flex-col p-6 sm:p-7',
+        prefersReducedMotion
+          ? 'transition-none'
+          : 'transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_60px_rgba(17,17,17,0.08)]',
+      ].join(' ')}
     >
       <div className="flex items-start gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-background)]">
@@ -118,7 +126,12 @@ function ContactCard({
           target={card.external ? '_blank' : undefined}
           rel={card.external ? 'noreferrer' : undefined}
           tabIndex={isVisible ? 0 : -1}
-          className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-5 py-3 text-sm font-medium text-[var(--color-text-primary)] transition-colors duration-300 hover:border-[rgba(16,16,16,0.12)] hover:bg-[var(--color-surface-soft)]"
+          className={[
+            'inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-background)] px-5 py-3 text-sm font-medium text-[var(--color-text-primary)]',
+            prefersReducedMotion
+              ? 'transition-none'
+              : 'transition-colors duration-300 hover:border-[rgba(16,16,16,0.12)] hover:bg-[var(--color-surface-soft)]',
+          ].join(' ')}
         >
           {card.actionLabel}
         </a>
@@ -128,18 +141,30 @@ function ContactCard({
 }
 
 export function ContactCards({ cards, telephoneNumber }: ContactCardsProps) {
+  const prefersReducedMotion = useReducedMotion()
   const [visible, setVisible] = useState(() => cards.map(() => false))
   const cardRefs = useRef<(HTMLLIElement | null)[]>([])
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      setVisible(cards.map(() => true))
+      cardRefs.current = cardRefs.current.slice(0, cards.length)
+      return
+    }
+
     setVisible(cards.map(() => false))
     cardRefs.current = cardRefs.current.slice(0, cards.length)
-  }, [cards])
+  }, [cards, prefersReducedMotion])
 
   useEffect(() => {
     const elements = cardRefs.current.filter((element): element is HTMLLIElement => Boolean(element))
 
     if (elements.length === 0) {
+      return undefined
+    }
+
+    if (prefersReducedMotion) {
+      setVisible(cards.map(() => true))
       return undefined
     }
 
@@ -183,7 +208,7 @@ export function ContactCards({ cards, telephoneNumber }: ContactCardsProps) {
     return () => {
       observer.disconnect()
     }
-  }, [cards])
+  }, [cards, prefersReducedMotion])
 
   return (
     <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -200,7 +225,12 @@ export function ContactCards({ cards, telephoneNumber }: ContactCardsProps) {
           ].join(' ')}
           style={{ transitionDelay: `${index * 90}ms` }}
         >
-          <ContactCard card={card} telephoneNumber={telephoneNumber} isVisible={visible[index]} />
+          <ContactCard
+            card={card}
+            telephoneNumber={telephoneNumber}
+            isVisible={visible[index]}
+            prefersReducedMotion={prefersReducedMotion}
+          />
         </li>
       ))}
     </ul>

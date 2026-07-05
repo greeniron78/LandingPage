@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { CanvasEngine } from '@/components/canvas/canvas-engine'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -36,13 +37,25 @@ function enterStyle(progress: number, start: number, end: number, offsetY: numbe
 export function HeroCanvas({ frames }: HeroCanvasProps) {
   const heroRef = useRef<HTMLElement | null>(null)
   const [progress, setProgress] = useState(0)
+  const prefersReducedMotion = useReducedMotion()
 
-  const premiumLabelStyle = enterStyle(progress, 0.1, 0.25, 20)
-  const headlineStyle = enterStyle(progress, 0.25, 0.5, 24)
-  const descriptionStyle = enterStyle(progress, 0.5, 0.75, 18)
+  const premiumLabelStyle = prefersReducedMotion
+    ? { opacity: 1, transform: 'none' }
+    : enterStyle(progress, 0.1, 0.25, 20)
+  const headlineStyle = prefersReducedMotion
+    ? { opacity: 1, transform: 'none' }
+    : enterStyle(progress, 0.25, 0.5, 24)
+  const descriptionStyle = prefersReducedMotion
+    ? { opacity: 1, transform: 'none' }
+    : enterStyle(progress, 0.5, 0.75, 18)
   const ctaStyle = enterStyle(progress, 0.75, 0.9, 16)
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      setProgress(0)
+      return undefined
+    }
+
     const hero = heroRef.current
 
     if (!hero) {
@@ -75,7 +88,7 @@ export function HeroCanvas({ frames }: HeroCanvasProps) {
         instance.kill()
       }
     }
-  }, [])
+  }, [prefersReducedMotion])
 
   return (
     <section ref={heroRef} className="relative isolate min-h-[100svh] overflow-hidden bg-[var(--color-background)]">
